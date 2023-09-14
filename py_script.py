@@ -355,7 +355,6 @@ set(long_str)
 set(long_str)
 {' ', 'I', 'a', 'd', 'e', 'i', 'l', 'm', 'o', 't', 'v'}
 ​
-
 Simple
 0
 2
