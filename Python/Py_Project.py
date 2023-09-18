@@ -17,4 +17,5 @@ for file in file_name:
         shutil.move(path + file, path + "image files/" + file)
     elif ".txt" in file and not os.path.exists(path + "text files/" + file):
         shutil.move(path + file, path + "text files/" + file)
+    
    
