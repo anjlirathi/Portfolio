@@ -1,0 +1,21 @@
+Utilized a 7000 customer database to calculate  and analyze churning statistics and root causes of attrition using Big Query and Constructed a Churn Dashboard in Tableau Desktop.
+
+Analyzed churning statistics, including root causes of attrition, from a 7,000-customer database using BigQuery and created a Churn Dashboard in Tableau Desktop.
+
+
+CAlculated customer insights by joining multiple tables by using PostgresSQL and recommended the top 3 movies from their DVD purchase history.
+Performed complex joins on multiple tables using PostgreSQL and provided recommendations for the top 3 movies based on their DVD purchase history.
+
+
+BY using PEAR(Problem, Exploration, Analysis, Report)technique I have Deliver a conclusive output table enabling the marketing team to distribute email templates to end users.
+
+Employed the PEAR (Problem, Exploration, Analysis, Report) technique to provide the marketing team with a conclusive output table for email template distribution to end users.
+
+
+Analyzed customer participation and engagement rates, revealing a 52% response rate, and subsequently recommended survey form improvements
+
+I’ve conducted an analysis of customer participation & engagement rates, response rates and thoroughly reviewed their feedback and product/service ratings.
+
+"Executed data cleaning and manipulation in Excel, leveraging Pivot tables for data summarization."
+
+"Analyzed customer engagement in Tableau, identified a 52% response rate, recommended survey improvements, and reviewed feedback and ratings.
