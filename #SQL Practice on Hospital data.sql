@@ -78,4 +78,3 @@ select first_name, last_name, 'Patient' As role from patients
 union all 
 select first_name, last_name, 'Doctor' As role from doctors;
 
-
