@@ -78,3 +78,20 @@ select first_name, last_name, 'Patient' As role from patients
 union all 
 select first_name, last_name, 'Doctor' As role from doctors;
 
+select day(admission_date) AS day_number , Count(admission_date) AS no_of_admissions
+FROM admissions
+Group BY day_number
+order by no_of_admissions DESC;
+
+select * from admissions
+Where patient_id = 542
+order BY admission_date Desc
+LIMIT 1;
+
+select 
+	(select patient_id from admissions 
+	where (patient_id/2) != 0 AND attending_doctor_id in (1,5,19)) AS patient_id,
+    (select attending_doctor_id from admissions
+     Where attending_doctor_id =2 and len(patient_id) =3) AS attending_doctor_id,
+    diagnosis
+FROM admissions;
