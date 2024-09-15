@@ -95,3 +95,71 @@ select
      Where attending_doctor_id =2 and len(patient_id) =3) AS attending_doctor_id,
     diagnosis
 FROM admissions;
+
+select patient_id, attending_doctor_id, diagnosis
+From admissions
+Where 
+  (patient_id % 2 != 0 and attending_doctor_id in (1,5,19))
+  OR 
+  (attending_doctor_id like '%2%' and len(patient_id) =3);
+
+  select patient_id, attending_doctor_id, diagnosis
+From admissions
+Where 
+  (patient_id % 2 != 0 and attending_doctor_id in (1,5,19))
+  OR 
+  (attending_doctor_id like '%2%' and len(patient_id) =3);
+  
+select first_name, last_name, Count(admission_date) As total_admissions
+From admissions
+join doctors
+On admissions.attending_doctor_id = doctors.doctor_id
+group by doctor_id;
+
+select doctor_id, 
+	concat(first_name, ' ', last_name) As full_name, 
+	Min(admission_date) as first_admission_date,
+    Max(admission_date) as last_admission_date
+From doctors d
+Join admissions a
+On d.doctor_id = a.attending_doctor_id
+Group By doctor_id;
+
+select province_name, count(*) as total_patients
+From patients p
+Join province_names s
+On p.province_id = s.province_id
+group by province_name 
+order by total_patients DESC;
+
+select 
+	concat(p.first_name, ' ', p.last_name) AS Patient_Name,
+    diagnosis,
+    concat(d.first_name, ' ', d.last_name) AS Doctor_Name
+From patients p
+Join admissions a
+ON p.patient_id = a.patient_id
+JOin doctors d 
+ON a.attending_doctor_id = d.doctor_id;
+
+
+select first_name, last_name, count(*) As duplicate_numbers
+From patients
+group by first_name, last_name
+Having duplicate_numbers>1;
+
+select 
+	concat(first_name, ' ' , last_name) As full_name,
+    Round(height/30.48, 1) As height,
+    Round(weight* 2.205, 0) As weight,
+    birth_date,
+    CAse
+    	When gender ='M' Then 'Male' 
+        else 'Female' 
+    END As gender
+From patients;
+
+select p.patient_id, first_name, last_name
+From patients p 
+Where p.patient_id Not IN ( select a.patient_id from admissions a);
+
