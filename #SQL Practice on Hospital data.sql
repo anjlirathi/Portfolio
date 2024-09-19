@@ -163,3 +163,96 @@ select p.patient_id, first_name, last_name
 From patients p 
 Where p.patient_id Not IN ( select a.patient_id from admissions a);
 
+
+/*Show patient_id, first_name, last_name, and attending doctor's specialty.
+Show only the patients who has a diagnosis as 'Epilepsy' and the doctor's first name is 'Lisa'
+Check patients, admissions, and doctors tables for required information.*/
+
+select p.patient_id, p.first_name, p.last_name,d.specialty
+From patients p
+JoiN admissions a
+On p.patient_id = a.patient_id
+Join doctors d 
+On a.attending_doctor_id = d.doctor_id
+Where diagnosis = 'Epilepsy' and d.first_name = 'Lisa';
+
+/*All patients who have gone through admissions, can see their medical documents on our site. Those patients are given a temporary password after their first admission. Show the patient_id and temp_password.
+
+The password must be the following, in order:
+1. patient_id
+2. the numerical length of patient's last_name
+3. year of patient's birth_date*/
+
+select p.patient_id, 
+	  concat (p.patient_id,Len(p.last_name),Year(birth_date)) As temp_password
+From patients p 
+Join admissions a 
+On p.patient_id = a.patient_id
+group by p.patient_id;
+
+/*Another Solution*/
+select Distict(p.patient_id), 
+	  concat (p.patient_id,Len(p.last_name),Year(birth_date)) As temp_password
+From patients p 
+Join admissions a 
+On p.patient_id = a.patient_id;
+
+/*Show patient_id, weight, height, isObese from the patients table. Display isObese as a boolean 0 or 1.
+Obese is defined as weight(kg)/(height(m)2) >= 30.
+weight is in units kg.
+height is in units cm.*/
+
+select patient_id, weight, height,
+	Case When weight/(POWER(height/100.0,2)) >=30 Then 1 Else 0
+    End AS isobese
+From patients;
+
+/*Each admission costs $50 for patients without insurance, and $10 for patients with insurance. All patients with an even patient_id have insurance.
+
+Give each patient a 'Yes' if they have insurance, and a 'No' if they don't have insurance. Add up the admission_total cost for each has_insurance group.*/
+
+With insurance AS (
+ select patient_id,
+	   (Case	
+       		when patient_id % 2 = 0 Then 'Yes'
+            Else 'No'
+            End) As has_insurance     
+ From admissions
+ )
+select has_insurance, 
+  Sum (Case	
+       when  patient_id % 2 = 0 Then 10
+            Else 50
+            End
+            ) As admission_total_cost
+From insurance
+Group by has_insurance;
+
+/*Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name*/
+
+select  pr.province_name 
+From province_names pr
+Join patients p
+On pr.province_id = p.province_id
+group by province_name
+having
+    Count(Case When gender = 'M' Then 1 EnD) > count(case when gender = 'F' then 1 End);
+
+/*We are looking for a specific patient. Pull all columns for the patient who matches the following criteria:
+- First_name contains an 'r' after the first two letters.
+- Identifies their gender as 'F'
+- Born in February, May, or December
+- Their weight would be between 60kg and 80kg
+- Their patient_id is an odd number
+- They are from the city 'Kingston'*/
+
+select * from patients
+where
+	first_name like '__r%' AND
+    gender = 'F' AND
+    month(birth_date) IN (2,5,12) And 
+    weight between 60 and 80 AND
+    patient_id % 2 != 0 And
+    city =  'Kingston';
+
+
