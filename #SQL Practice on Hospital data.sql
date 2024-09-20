@@ -255,4 +255,99 @@ where
     patient_id % 2 != 0 And
     city =  'Kingston';
 
+/*Show the percent of patients that have 'M' as their gender. Round the answer to the nearest hundreth number and in percent form.*/
 
+select Concat (
+	ROUND((
+      	select Count(*)
+      	From patients
+      	where gender = 'M'
+      )/ Cast(Count(*) AS Float),
+      4)*100, '%') as male_patients_percent 
+from patients;
+
+/*For each day display the total amount of admissions on that day. Display the amount changed from the previous date.*/
+
+With admission_count AS (
+	select admission_date, Count(admission_date) As admission_day,
+	Count(admission_date)-LAg(Count(admission_date)) OVER(order by admission_date) As admission_count_change
+    From admissions
+    Group by admission_date)
+Select * from admission_count;
+
+/*We need a breakdown for the total amount of admissions each doctor has started each year. Show the doctor_id, doctor_full_name, specialty, year, total_admissions for that year.*/
+
+
+select doctor_id, 
+	concat(d.first_name, ' ', d.last_name) As doctor_full_name, 
+    specialty, 
+    Year(admission_date) As year,  
+    Count(admission_date) as total_admissions
+from doctors d 
+Join admissions a 
+on d.doctor_id = a.attending_doctor_id
+Group By doctor_full_name, Year;
+
+/*Show all of the patients grouped into weight groups.
+Show the total amount of patients in each weight group.
+Order the list by the weight group decending.
+
+For example, if they weight 100 to 109 they are placed in the 100 weight group, 110-119 = 110 weight group, etc.*/
+
+Select count(patient_id) AS total_patients,
+	   floor(weight/10)*10 As weight_group
+From patients
+Group by weight_group
+Order By weight_group desc;
+
+/*Each admission costs $50 for patients without insurance, and $10 for patients with insurance. All patients with an even patient_id have insurance.
+
+Give each patient a 'Yes' if they have insurance, and a 'No' if they don't have insurance. Add up the admission_total cost for each has_insurance group.*/
+
+select 
+	Case When patient_id % 2 = 0 THen 'Yes' Else 'No' End  As has_insurance,
+    Sum(Case When  patient_id % 2 = 0 then 10 Else 50 End ) As admission_total_cost
+From admissions
+group by has_insurance;
+	   
+/*Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name*/
+
+select province_name
+From province_names pn 
+Join patients p 
+On pn.province_id = p.province_id
+Group By province_name
+Having
+	Sum(gender = 'M') > Sum(gender ='F');
+
+/* Show the percent of patients that have 'M' as their gender. Round the answer to the nearest hundreth number and in percent form.*/
+
+select Concat(
+    Round( (
+    Select Count(*) From patients Where gender= 'M')
+    / Cast(Count(*) As Float), 
+   4)*100 , '%') As male_patients_percent
+From patients;
+
+/*Another method*/
+
+SELECT
+  round(100 * avg(gender = 'M'), 2) || '%' AS percent_of_male_patients
+FROM
+  patients;
+
+/*And*/
+
+  SELECT 
+   CONCAT(ROUND(SUM(gender='M') / CAST(COUNT(*) AS float), 4) * 100, '%')
+FROM patients;
+
+/*Sort the province names in ascending order in such a way that the province 'Ontario' is always on top.*/
+
+select province_name 
+from province_names
+Order by 
+	(Case when province_name = 'Ontario' Then 0 Else 1 End),
+    province_name;
+
+    
