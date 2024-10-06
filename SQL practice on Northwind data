@@ -1,0 +1,44 @@
+/*Show the company_name, contact_name, fax number of all customers that has a fax number. (not null)*/
+
+select company_name,contact_name,fax
+from customers
+where fax not null;
+
+/*Show the first_name, last_name. hire_date of the most recently hired employee.*/
+
+select first_name, last_name, hire_date
+from employees
+order by hire_date desc
+limit 1;
+
+/*Show the average unit price rounded to 2 decimal places, the total units in stock, total discontinued products from the products table.*/
+select 
+Round(avg(unit_price),2) As unit_price, 
+Sum(units_in_stock) As units_in_stock,
+Sum(discontinued) As discontinued_products
+from products;
+
+/*Show the ProductName, CompanyName, CategoryName from the products, suppliers, and categories table*/
+select product_name,company_name,category_name
+From products
+join suppliers
+on products.supplier_id = suppliers.supplier_id
+join categories
+on products.category_id = categories.category_id;
+
+/*Show the category_name and the average product unit price for each category rounded to 2 decimal places.*/
+select category_name, round(avg(unit_price),2) as avg_product_unit_price
+from categories c
+join products p
+On p.category_id = c.category_id
+group by category_name;
+
+/*Show the city, company_name, contact_name from the customers and suppliers table merged together.
+Create a column which contains 'customers' or 'suppliers' depending on the table it came from.*/
+select city,company_name,contact_name, 'customers' As relationship
+from customers 
+union 
+select city,company_name,contact_name, 'suppliers' As relationship
+from suppliers;
+
+
